@@ -1,0 +1,117 @@
+     1                                  bits 32 ; assembling for the 32 bits architecture
+     2                                  
+     3                                  ; declare the EntryPoint (a label defining the very first instruction of the program)
+     4                                  global start        
+     5                                  
+     6                                  ; declare external functions needed by our program
+     7                                  extern exit               ; tell nasm that exit exists even if we won't be defining it
+     8                                  import exit msvcrt.dll    ; exit is a function that ends the calling process. It is defined in msvcrt.dll
+     9                                                            ; msvcrt.dll contains exit, printf and all the other important C-runtime specific functions
+    10                                  
+    11                                  ; our data is declared here (the variables needed by our program)
+    12                                  segment data use32 class=data
+    13                                      ; ...
+    14                                      ;a,b-byte; c-word; e-doubleword; x-qword
+    15                                      
+    16 00000000 12                          a db 0x12
+    17 00000001 10                          b db 0x10
+    18 00000002 0010                        c dw 0x1000
+    19 00000004 78563412                    e dd 0x12345678
+    20 00000008 F0DEBC9A78563412            x dq 0x123456789ABCDEF0
+    21                                      
+    22                                      
+    23                                      ;test var
+    24                                      ;a1 db -1
+    25                                      ;a2 db 1
+    26                                  
+    27                                  ; our code starts here
+    28                                  segment code use32 class=code
+    29                                      start:
+    30                                          ; ...
+    31                                  
+    32                                          ;TEST
+    33                                          ;mov al, [a1]
+    34                                          ;mul byte [a2]
+    35                                          
+    36                                          
+    37                                          ;(a-2)/(b+c)+a*c+e-x      
+    38                                    
+    39                                          ; bl - byte (a-2)
+    40 00000000 8A1D[00000000]                  mov bl, [a]
+    41 00000006 80EB02                          sub bl, 2  
+    42                                          
+    43 00000009 B800000000                      mov eax, 0
+    44                                          ; cx - word (b+c)
+    45 0000000E A0[01000000]                    mov al, [b]
+    46 00000013 B400                            mov ah, 0
+    47 00000015 660305[02000000]                add ax, [c]
+    48 0000001C 6689C1                          mov cx, ax
+    49                                          
+    50                                          ; dx:ax - dword (a-2) / word (b+c)
+    51 0000001F 66BA0000                        mov dx, 0
+    52 00000023 B400                            mov ah, 0 
+    53 00000025 88D8                            mov al, bl
+    54 00000027 66F7F1                          div WORD cx
+    55                                          
+    56                                          ;ebx - word ax (from dx:ax)
+    57 0000002A 89C3                            mov ebx, eax
+    58                                          
+    59                                             
+    60                                          ; dx:ax - dword (a * c)
+    61 0000002C A0[00000000]                    mov al, [a]
+    62 00000031 B400                            mov ah, 0
+    63 00000033 66F725[02000000]                mul WORD [c]
+    64                                          
+    65                                          ; ecx -> dx:ax
+    66 0000003A 6652                            push dx
+    67 0000003C 6650                            push ax
+    68 0000003E 58                              pop eax
+    69 0000003F 89C1                            mov ecx, eax
+    70                                             
+    71                                          ; ebx - (a-2)/(b+c)+a*c+e
+    72 00000041 01CB                            add ebx, ecx
+    73 00000043 031D[04000000]                  add ebx, [e]
+    74                                          
+    75                                          ; edx:eax - qword ebx
+    76 00000049 BA00000000                      mov edx, 0
+    77 0000004E 89D8                            mov eax, ebx
+    78                                          
+    79                                          ; ebx:ecx - qword x
+    80 00000050 8B0D[08000000]                  mov ecx, [x]
+    81 00000056 8B1D[0C000000]                  mov ebx, [x+4]
+    82                                          
+    83                                          ; edx:eax - qword (ebx + x)
+    84 0000005C 29C8                            sub eax, ecx
+    85 0000005E 19DA                            sbb edx, ebx
+    86                                          
+    87                                          
+    88                                          
+    89                                          
+    90                                          
+    91                                          
+    92                                          
+    93                                          
+    94                                          
+    95                                          
+    96                                          
+    97                                          
+    98                                          
+    99                                          
+   100                                          
+   101                                          
+   102                                          
+   103                                          
+   104                                          
+   105                                          
+   106                                          
+   107                                          
+   108                                          
+   109                                          
+   110                                          
+   111                                         
+   112                                          
+   113                                          
+   114                                      
+   115                                          ; exit(0)
+   116 00000060 6A00                            push    dword 0      ; push the parameter for exit onto the stack
+   117 00000062 FF15[00000000]                  call    [exit]       ; call exit to terminate the program

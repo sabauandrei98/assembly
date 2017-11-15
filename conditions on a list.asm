@@ -70,7 +70,7 @@ split:
 ;end
         
     mov ebx, 0       ;reset the counter
-    mov ecx, lenS/2  ;length(d1) == length(d2) == length(s)/2
+    mov ecx, [contD1]  ;length(d1) == length(d2) == length(s)/2
         
 printLists1:
         
@@ -94,7 +94,7 @@ printLists1:
 ;end
 
     mov ebx, 0
-    mov ecx, lenS/2
+    mov ecx, [contD2]
 
 printLists2:
         

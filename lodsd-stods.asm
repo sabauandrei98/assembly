@@ -38,3 +38,7 @@ segment code use32 class=code
         ; exit(0)
         push    dword 0      ; push the parameter for exit onto the stack
         call    [exit]       ; call exit to terminate the program
+
+        
+        
+    

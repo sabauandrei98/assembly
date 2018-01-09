@@ -28,7 +28,7 @@ start:
 	push dword len1
 	push dword sir2
 	push dword len2
-	call factorial
+	call prefix
 	
 	mov ecx, 100
 	mov esi, eax
@@ -57,7 +57,7 @@ start:
 	push dword len2
 	push dword sir3
 	push dword len3
-	call factorial
+	call prefix
 	
 	mov ecx, 100
 	mov esi, eax
@@ -86,7 +86,7 @@ start:
 	push dword len1
 	push dword sir3
 	push dword len3
-	call factorial
+	call prefix
 	
 	mov ecx, 100
 	mov esi, eax

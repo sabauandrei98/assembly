@@ -15,7 +15,7 @@ bits 32
 	
 
 ;definire procedura
-factorial: ; 
+prefix: ; 
 	mov eax, 0
 	
 	mov edx, [esp + 4]
